@@ -15,11 +15,54 @@ $log_kunci_pintu = show_log_kunci_pintu();
 // ambil data log aksi otomatis
 $log_aksi_otomatis = show_log_aksi_otomatis();
 
+// proses cek aksi otomatis
+
+// catat waktu saat halaman direfresh
+date_default_timezone_set('Asia/Jakarta');
+$time = date('H:i');
+
+// cek, jika sudah pernah melakukan aksi otomatis
+if(isset($_GET['time'])){
+    // cek apakah waktu sekarang sama dengan waktu aksi otomatis, jika tidak, lakukan aksi otomatis
+    if($time != $_GET['time']){
+        foreach($log_aksi_otomatis as $cek){
+            if($time == $cek['waktu']){
+                // jika nama aksi Buka Kunci
+                if($cek['nama_aksi'] == "Buka Kunci"){
+                    echo"<meta http-equiv='refresh' content='0;URL=Kunci/kontrol_kunci.php?buka&username={$_SESSION['username']}&status={$log_kunci_pintu[0]['status']}' />";
+                }
+                // jika nama aksi Tutup Kunci
+                else if($cek['nama_aksi'] == "Tutup Kunci"){
+                    echo"<meta http-equiv='refresh' content='0;URL=Kunci/kontrol_kunci.php?tutup&username={$_SESSION['username']}&status={$log_kunci_pintu[0]['status']}' />";
+                }
+            }
+        }
+    }
+}
+// jika belum
+else{
+    // cek apakah waktu sekarang sama dengan waktu aksi otomatis, jika tidak, lakukan aksi otomatis
+        foreach($log_aksi_otomatis as $cek){
+            if($time == $cek['waktu']){
+                // jika nama aksi Buka Kunci
+                if($cek['nama_aksi'] == "Buka Kunci"){
+                    echo"<meta http-equiv='refresh' content='0;URL=Kunci/kontrol_kunci.php?buka&username={$_SESSION['username']}&status={$log_kunci_pintu[0]['status']}' />";
+                }
+                // jika nama aksi Tutup Kunci
+                else if($cek['nama_aksi'] == "Tutup Kunci"){
+                    echo"<meta http-equiv='refresh' content='0;URL=Kunci/kontrol_kunci.php?tutup&username={$_SESSION['username']}&status={$log_kunci_pintu[0]['status']}' />";
+                }
+            }
+        }
+}
+
 ?>
 
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- meta refresh yang merefresh halaman ini tiap 1 menit untuk periksa waktu -->
+    <meta http-equiv='refresh' content='60;URL=index.php' />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Smart Door Lock</title>
@@ -58,6 +101,7 @@ $log_aksi_otomatis = show_log_aksi_otomatis();
                     <form class="form" action="Kunci/kontrol_kunci.php" method="get">
                         <!-- simpan username akun yang login -->
                         <input type="hidden" name="username" value="<?php echo $_SESSION['username'] ?>">
+                        <input type="hidden" name="status" value="<?php echo $log_kunci_pintu[0]['status'] ?>">
 
                         <div class="row">
                             <div class="btn-group text-center" role="group">
