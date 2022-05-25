@@ -55,11 +55,12 @@ $log_aksi_otomatis = show_log_aksi_otomatis();
                     <h2 class="text-white text-center">Kontrol Kunci Pintu</h2>
 
                     <!-- Tombol -->
-                    <form class="form row" action="Kunci/kontrol_kunci.php" method="get">
-                            <div class="btn-group text-center" role="group">
-                                <!-- simpan username akun yang login -->
-                                <input type="hidden" name="username" value="<?php echo $_SESSION['username'] ?>">
+                    <form class="form" action="Kunci/kontrol_kunci.php" method="get">
+                        <!-- simpan username akun yang login -->
+                        <input type="hidden" name="username" value="<?php echo $_SESSION['username'] ?>">
 
+                        <div class="row">
+                            <div class="btn-group text-center" role="group">
                                 <!-- Kontrol tombol -->
                                 <?php
                                     // jika status kunci terbaru yaitu terbuka, disable tombol buka
@@ -74,7 +75,9 @@ $log_aksi_otomatis = show_log_aksi_otomatis();
                                     }
                                 ?>
                             </div>
-                        </form>
+                        </div>
+                    </form>
+
                 </div>
 
                 <!-- Form Aksi Otomatis -->
@@ -84,7 +87,7 @@ $log_aksi_otomatis = show_log_aksi_otomatis();
                         <h4 class="text-center">Atur Aksi Otomatis</h4>
                         <form action="Kunci/aksi_otomatis.php" method="get">
                             
-                            <label for="waktu"><strong>Waktu</strong></label>
+                            <label for="waktu" class="form-label mt-3 me-2"><strong>Waktu: </strong></label>
                             <input type="time" name="waktu" min="00:00" max="23:59" required>                            
                             
                             <div class="form-check mt-3">
@@ -122,8 +125,8 @@ $log_aksi_otomatis = show_log_aksi_otomatis();
                 <div class="row my-5">
                     <div class="container rounded-4 col-lg-6 p-5" style="background-color: #563EEA;">
                         <div class="container text-center text-white">
-                            <h1>Notifikasi</h1>
-                            <h2>Kunci Pintu Tertutup/Terbuka</h2>
+                            <h1>Status:</h1>
+                            <h2>Kunci Pintu <?php echo $log_kunci_pintu[0]['status'] ?></h2>
                         </div>
                     </div>
                 </div>
