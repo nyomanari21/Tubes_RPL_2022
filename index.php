@@ -1,13 +1,45 @@
+<?php
+
+session_start(); // mulai sessionnya
+include("Log/log_kunci_pintu.php");
+include("Log/log_aksi_otomatis.php");
+
+// cek session untuk memeriksa user telah login atau belum
+if(!isset($_SESSION['username'])){ // jika tidak ada session username
+    header("location: Login/login.php"); // kita redirect ke halaman index.php
+}
+
+// ambil data log kunci pintu
+$log_kunci_pintu = show_log_kunci_pintu();
+
+// ambil data log aksi otomatis
+$log_aksi_otomatis = show_log_aksi_otomatis();
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tubes RPL</title>
+    <title>Smart Door Lock</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   </head>
 
   <body>
+
+  <!-- Navbar -->
+    <nav class="navbar border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.php"><h2>Smart Door Lock</h2></a>
+            
+            <a href="Login/logout.php">
+                <button class="navbar-brand me-2 btn btn-link text-decoration-none">
+                    <span class="">Logout</span>
+                </button>
+            </a>
+        </div>
+    </nav>
 
     <!-- Halaman Utama -->
     <section>
@@ -23,23 +55,26 @@
                     <h2 class="text-white text-center">Kontrol Kunci Pintu</h2>
 
                     <!-- Tombol -->
-                    <div class="container row m-auto mt-3">
-                        <div class="btn-group text-center" role="group">
-                            <button type="button" class="btn btn-success">
-                                <a href="#?" class="text-decoration-none text-white">Buka</a>
-                            </button>
-                            <button type="button" class="btn btn-danger">
-                                <a href="#?" class="text-decoration-none text-white">Tutup</a>
-                            </button>
-                            <!-- <button type="button" class="btn btn-outline-light">
-                                Buka
-                            </button>
-                            <button type="button" class="btn btn-outline-light">
-                                Tutup
-                            </button> -->
-                        </div>
-                    </div>
+                    <form class="form row" action="Kunci/kontrol_kunci.php" method="get">
+                            <div class="btn-group text-center" role="group">
+                                <!-- simpan username akun yang login -->
+                                <input type="hidden" name="username" value="<?php echo $_SESSION['username'] ?>">
 
+                                <!-- Kontrol tombol -->
+                                <?php
+                                    // jika status kunci terbaru yaitu terbuka, disable tombol buka
+                                    if($log_kunci_pintu[0]['status'] == "Terbuka"){
+                                        echo "<button type='submit' name='buka' class='btn btn-success' disabled>Buka</button>
+                                            <button type='submit' name='tutup' class='btn btn-danger'>Tutup</button>";
+                                    }
+                                    // jika status kunci terbaru yaitu tertutup, disable tombol tutup
+                                    else{
+                                        echo "<button type='submit' name='buka' class='btn btn-success'>Buka</button>
+                                            <button type='submit' name='tutup' class='btn btn-danger' disabled>Tutup</button>";
+                                    }
+                                ?>
+                            </div>
+                        </form>
                 </div>
 
                 <!-- Form Aksi Otomatis -->
@@ -47,25 +82,19 @@
 
                     <div class="container col-10 bg-light rounded-4 py-3">
                         <h4 class="text-center">Atur Aksi Otomatis</h4>
-                        <form action="index.php" method="get">
+                        <form action="Kunci/aksi_otomatis.php" method="get">
                             
-                            <label for=""><strong>Waktu</strong></label>
-                            <select class="form-select" name="waktu">
-                                <option selected value="00.00">00.00</option>
-                                <option value="00.30">00.30</option>
-                                <option value="01.00">01.00</option>
-                            </select>
-                            
-
+                            <label for="waktu"><strong>Waktu</strong></label>
+                            <input type="time" name="waktu" min="00:00" max="23:59" required>                            
                             
                             <div class="form-check mt-3">
-                                <input class="form-check-input" type="radio" name="aksi" id="buka_kunci" value="Buka Kunci" checked>
+                                <input class="form-check-input" type="radio" name="aksi" id="buka_kunci" value="1" checked>
                                 <label class="form-check-label" for="buka_kunci">
                                     Buka Kunci
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="aksi" id="tutup_kunci" value="Tutup Kunci">
+                                <input class="form-check-input" type="radio" name="aksi" id="tutup_kunci" value="2">
                                 <label class="form-check-label" for="tutup_kunci">
                                     Tutup Kunci
                                 </label>
@@ -84,19 +113,10 @@
             <!-- Kanan -->
             <div class="col-lg-9">
 
-                <!-- Navbar -->
-                <nav class="navbar border-bottom">
-                    <div class="container-fluid">
-                        <!-- Judul -->
-                        <h1 class="text-center">Smart Door Lock</h1>
-                        <!-- Log Out -->
-                        <a href="#">
-                            <button class="navbar-brand me-2 btn btn-link text-decoration-none">
-                                <span class="">Logout</span>
-                            </button>
-                        </a>
-                    </div>
-                </nav>
+                <!-- Judul -->
+                <div class="container my-5">
+                    <h1 class="text-center">Selamat Datang <?php echo $_SESSION['nama']; ?>!</h1>
+                </div>
 
                 <!-- Notifikasi -->
                 <div class="row my-5">
@@ -121,16 +141,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>22/04/2022</td>
-                                    <td>15.30</td>
-                                    <td>Tertutup</td>
-                                </tr>
-                                <tr>
-                                    <td>22/04/2022</td>
-                                    <td>15.00</td>
-                                    <td>Terbuka</td>
-                                </tr>
+                                <?php
+                                    foreach($log_kunci_pintu as $row){
+                                        echo "<tr>
+                                                <td>{$row['tanggal']}</td>
+                                                <td>{$row['waktu']}</td>
+                                                <td>{$row['status']}</td>
+                                            </tr>";
+                                    }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -149,26 +168,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Buka Kunci</td>
-                                    <td>07.00</td>
-                                    <td>
-                                        <a href="#" class="text-decoration-none text-black">
-                                            <img src="Assets/icons8-trash-384.png" style="width:5%">
-                                            Hapus
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Tutup Kunci</td>
-                                    <td>20.00</td>
-                                    <td>
-                                        <a href="#" class="text-decoration-none text-black">
-                                            <img src="Assets/icons8-trash-384.png" style="width:5%">
-                                            Hapus
-                                        </a>
-                                    </td>
-                                </tr>
+                                <?php
+                                    foreach($log_aksi_otomatis as $row){
+                                        echo "<tr>
+                                                <td>{$row['waktu']}</td>
+                                                <td>{$row['nama_aksi']}</td>
+                                                <td>
+                                                    <a href='Kunci/aksi_otomatis.php?id_hapus={$row['id_log_aksi']}' class='text-decoration-none text-black'>
+                                                        <img src='Assets/icons8-trash-384.png' style='width:5%'>
+                                                        Hapus
+                                                    </a>
+                                                </td>
+                                            </tr>";
+                                    }
+                                ?>
                             </tbody>
                         </table>
                     </div>
