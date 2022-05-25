@@ -42,18 +42,18 @@ if(isset($_GET['time'])){
 // jika belum
 else{
     // cek apakah waktu sekarang sama dengan waktu aksi otomatis, jika tidak, lakukan aksi otomatis
-        foreach($log_aksi_otomatis as $cek){
-            if($time == $cek['waktu']){
-                // jika nama aksi Buka Kunci
-                if($cek['nama_aksi'] == "Buka Kunci"){
-                    echo"<meta http-equiv='refresh' content='0;URL=Kunci/kontrol_kunci.php?buka&username={$_SESSION['username']}&status={$log_kunci_pintu[0]['status']}' />";
-                }
-                // jika nama aksi Tutup Kunci
-                else if($cek['nama_aksi'] == "Tutup Kunci"){
-                    echo"<meta http-equiv='refresh' content='0;URL=Kunci/kontrol_kunci.php?tutup&username={$_SESSION['username']}&status={$log_kunci_pintu[0]['status']}' />";
-                }
+    foreach($log_aksi_otomatis as $cek){
+        if($time == $cek['waktu']){
+            // jika nama aksi Buka Kunci
+            if($cek['nama_aksi'] == "Buka Kunci"){
+                echo"<meta http-equiv='refresh' content='0;URL=Kunci/kontrol_kunci.php?buka&username={$_SESSION['username']}&status={$log_kunci_pintu[0]['status']}' />";
+            }
+            // jika nama aksi Tutup Kunci
+            else if($cek['nama_aksi'] == "Tutup Kunci"){
+                echo"<meta http-equiv='refresh' content='0;URL=Kunci/kontrol_kunci.php?tutup&username={$_SESSION['username']}&status={$log_kunci_pintu[0]['status']}' />";
             }
         }
+    }
 }
 
 ?>
