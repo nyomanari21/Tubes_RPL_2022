@@ -162,9 +162,18 @@ else{
                         <h4 class="text-center">Demo Peringatan Kunci Pintu</h4>
 
                         <form action="index.php" method="get">
-                            <button type="submit" name="demo-peringatan" class="btn btn-danger d-grid gap-2 col-lg-4 col-md-4 col-sm-4 mx-auto mt-4">
-                                Klik
-                            </button>
+                            <?php
+                                if(isset($_GET['demo-peringatan'])){
+                                    echo "<button type='submit' name='demo-peringatan' class='btn btn-danger d-grid gap-2 col-lg-4 col-md-4 col-sm-4 mx-auto mt-4' disabled>
+                                        Demo sedang berjalan
+                                    </button>";
+                                }
+                                else{
+                                    echo "<button type='submit' name='demo-peringatan' class='btn btn-danger d-grid gap-2 col-lg-4 col-md-4 col-sm-4 mx-auto mt-4'>
+                                        Klik
+                                    </button>";
+                                }
+                            ?>
                         </form>
                     </div>
 
