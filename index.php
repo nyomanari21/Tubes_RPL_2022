@@ -153,7 +153,22 @@ else{
                         </form>
                     </div>
 
-                </div> 
+                </div>
+
+                <!-- Demo Peringatan -->
+                <div class="row my-5">
+
+                    <div class="container col-10 bg-light rounded 4 py-3">
+                        <h4 class="text-center">Demo Peringatan Kunci Pintu</h4>
+
+                        <form action="index.php" method="get">
+                            <button type="submit" name="demo-peringatan" class="btn btn-danger d-grid gap-2 col-lg-4 col-md-4 col-sm-4 mx-auto mt-4">
+                                Klik
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
                 
             </div>
 
@@ -163,6 +178,23 @@ else{
                 <!-- Judul -->
                 <div class="container my-5">
                     <h1 class="text-center">Selamat Datang <?php echo $_SESSION['nama']; ?>!</h1>
+                </div>
+
+                <!-- Peringatan Kunci Pintu -->
+                <div class="container my-5">
+                    <?php
+                        // jika tombol demo peringatan di klik dan status kunci pintu terbuka
+                        if(isset($_GET['demo-peringatan']) && $log_kunci_pintu[0]['status'] == "Terbuka"){
+                            echo "<h1 class='text-center' style='color: red;'>
+                                        Peringatan!
+                                        <br>
+                                        Kunci pintu masih terbuka, segera tutup kunci pintu
+                                    </h1>";
+                            echo "<audio controls autoplay='autoplay'>
+                                        <source src='Assets/alert.mp3' type='audio/mpeg'>
+                                    </audio>";
+                        }
+                    ?>
                 </div>
 
                 <!-- Notifikasi -->

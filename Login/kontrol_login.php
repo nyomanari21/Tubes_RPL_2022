@@ -16,7 +16,7 @@ if($username != '' && $password != ''){
 
     if(mysqli_num_rows($query) < 1){
         // Buat sebuah cookie untuk menampung data pesan kesalahan
-        setcookie("message", "Username atau Password salah", time()+60);
+        setcookie("message", "Username atau Password salah", time()+15);
         header("location: login.php");
     }
     else{
