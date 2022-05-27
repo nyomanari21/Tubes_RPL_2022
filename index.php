@@ -170,7 +170,7 @@ else{
                                 }
                                 else{
                                     echo "<button type='submit' name='demo-peringatan' class='btn btn-danger d-grid gap-2 col-lg-4 col-md-4 col-sm-4 mx-auto mt-4'>
-                                        Klik
+                                        Demo peringatan
                                     </button>";
                                 }
                             ?>
